@@ -1,0 +1,652 @@
+{
+  "components": {
+    "schemas": {
+      "CSVImportError": {
+        "properties": {
+          "error": {
+            "title": "Error",
+            "type": "string"
+          },
+          "row": {
+            "title": "Row",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "row",
+          "error"
+        ],
+        "title": "CSVImportError",
+        "type": "object"
+      },
+      "CSVImportResponse": {
+        "properties": {
+          "errors": {
+            "items": {
+              "$ref": "#/components/schemas/CSVImportError"
+            },
+            "title": "Errors",
+            "type": "array"
+          },
+          "imported": {
+            "title": "Imported",
+            "type": "integer"
+          },
+          "total_rows": {
+            "title": "Total Rows",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "total_rows",
+          "imported",
+          "errors"
+        ],
+        "title": "CSVImportResponse",
+        "type": "object"
+      },
+      "FieldDefinition": {
+        "properties": {
+          "display_name": {
+            "maxLength": 200,
+            "minLength": 1,
+            "title": "Display Name",
+            "type": "string"
+          },
+          "filterable": {
+            "default": false,
+            "title": "Filterable",
+            "type": "boolean"
+          },
+          "is_llm_visible": {
+            "default": false,
+            "description": "If true, the field value is sent to the LLM as context and may be shared with the end user.",
+            "title": "Is Llm Visible",
+            "type": "boolean"
+          },
+          "is_public": {
+            "default": false,
+            "description": "If true, the field value is included in external/public API responses.",
+            "title": "Is Public",
+            "type": "boolean"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Name",
+            "type": "string"
+          },
+          "options": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Options"
+          },
+          "required": {
+            "default": false,
+            "title": "Required",
+            "type": "boolean"
+          },
+          "searchable": {
+            "default": false,
+            "title": "Searchable",
+            "type": "boolean"
+          },
+          "status": {
+            "$ref": "#/components/schemas/FieldStatus",
+            "default": "active"
+          },
+          "type": {
+            "$ref": "#/components/schemas/FieldType"
+          },
+          "unique": {
+            "default": false,
+            "title": "Unique",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name",
+          "display_name",
+          "type"
+        ],
+        "title": "FieldDefinition",
+        "type": "object"
+      },
+      "FieldStatus": {
+        "description": "Lifecycle status for a template field definition.",
+        "enum": [
+          "active",
+          "deprecated",
+          "deleted"
+        ],
+        "title": "FieldStatus",
+        "type": "string"
+      },
+      "FieldType": {
+        "description": "Supported field types for knowledge template definitions.",
+        "enum": [
+          "text",
+          "long_text",
+          "number",
+          "boolean",
+          "date",
+          "time",
+          "datetime",
+          "select",
+          "multi_select",
+          "url",
+          "email",
+          "phone",
+          "location"
+        ],
+        "title": "FieldType",
+        "type": "string"
+      },
+      "FulltextSearchRequest": {
+        "properties": {
+          "filters": {
+            "anyOf": [
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filters"
+          },
+          "limit": {
+            "default": 20,
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "default": 0,
+            "minimum": 0,
+            "title": "Offset",
+            "type": "integer"
+          },
+          "query": {
+            "maxLength": 500,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "FulltextSearchRequest",
+        "type": "object"
+      },
+      "FulltextSearchResponse": {
+        "properties": {
+          "estimated_total_hits": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Estimated Total Hits"
+          },
+          "hits": {
+            "items": {
+              "$ref": "#/components/schemas/SearchHit"
+            },
+            "title": "Hits",
+            "type": "array"
+          },
+          "processing_time_ms": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Processing Time Ms"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Query"
+          }
+        },
+        "required": [
+          "hits"
+        ],
+        "title": "FulltextSearchResponse",
+        "type": "object"
+      },
+      "KnowledgeLimitsResponse": {
+        "description": "Effective knowledge limits resolved for the current tenant.",
+        "properties": {
+          "knowledge_max_fields_per_template": {
+            "title": "Knowledge Max Fields Per Template",
+            "type": "integer"
+          },
+          "knowledge_max_records_per_template": {
+            "title": "Knowledge Max Records Per Template",
+            "type": "integer"
+          },
+          "knowledge_max_searchable_fields": {
+            "title": "Knowledge Max Searchable Fields",
+            "type": "integer"
+          },
+          "knowledge_max_templates": {
+            "title": "Knowledge Max Templates",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "knowledge_max_templates",
+          "knowledge_max_fields_per_template",
+          "knowledge_max_records_per_template",
+          "knowledge_max_searchable_fields"
+        ],
+        "title": "KnowledgeLimitsResponse",
+        "type": "object"
+      },
+      "RecordListResponse": {
+        "properties": {
+          "has_more": {
+            "title": "Has More",
+            "type": "boolean"
+          },
+          "limit": {
+            "title": "Limit",
+            "type": "integer"
+          },
+          "offset": {
+            "title": "Offset",
+            "type": "integer"
+          },
+          "records": {
+            "items": {
+              "$ref": "#/components/schemas/RecordResponse"
+            },
+            "title": "Records",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "records",
+          "total",
+          "offset",
+          "limit",
+          "has_more"
+        ],
+        "title": "RecordListResponse",
+        "type": "object"
+      },
+      "RecordResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "template_id": {
+            "title": "Template Id",
+            "type": "string"
+          },
+          "template_version": {
+            "title": "Template Version",
+            "type": "integer"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "values_data": {
+            "additionalProperties": true,
+            "title": "Values Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "id",
+          "template_id",
+          "tenant_id",
+          "template_version",
+          "values_data",
+          "is_active",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "RecordResponse",
+        "type": "object"
+      },
+      "SearchHit": {
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "ranking_score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ranking Score"
+          },
+          "record_id": {
+            "title": "Record Id",
+            "type": "string"
+          },
+          "template_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template Version"
+          },
+          "values_data": {
+            "additionalProperties": true,
+            "title": "Values Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "record_id",
+          "values_data"
+        ],
+        "title": "SearchHit",
+        "type": "object"
+      },
+      "SemanticSearchHit": {
+        "properties": {
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At"
+          },
+          "record_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Record Id"
+          },
+          "score": {
+            "title": "Score",
+            "type": "number"
+          },
+          "template_version": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Template Version"
+          },
+          "values_data": {
+            "additionalProperties": true,
+            "title": "Values Data",
+            "type": "object"
+          }
+        },
+        "required": [
+          "score",
+          "values_data"
+        ],
+        "title": "SemanticSearchHit",
+        "type": "object"
+      },
+      "SemanticSearchRequest": {
+        "properties": {
+          "query": {
+            "maxLength": 2000,
+            "minLength": 1,
+            "title": "Query",
+            "type": "string"
+          },
+          "top_k": {
+            "default": 10,
+            "maximum": 50,
+            "minimum": 1,
+            "title": "Top K",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "title": "SemanticSearchRequest",
+        "type": "object"
+      },
+      "SemanticSearchResponse": {
+        "properties": {
+          "query": {
+            "title": "Query",
+            "type": "string"
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/SemanticSearchHit"
+            },
+            "title": "Results",
+            "type": "array"
+          },
+          "total": {
+            "title": "Total",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "results",
+          "query",
+          "total"
+        ],
+        "title": "SemanticSearchResponse",
+        "type": "object"
+      },
+      "src__interfaces__api__v1__knowledge_models__TemplateResponse": {
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "created_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created By"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description"
+          },
+          "fields": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "title": "Fields",
+            "type": "array"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "is_active": {
+            "title": "Is Active",
+            "type": "boolean"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "updated_by": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Updated By"
+          },
+          "version": {
+            "title": "Version",
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "tenant_id",
+          "name",
+          "fields",
+          "version",
+          "is_active",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "TemplateResponse",
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "bearerFormat": "API Key",
+        "description": "API Key for tenant operations. Create one via POST /api/v1/admin/api-keys",
+        "scheme": "bearer",
+        "type": "http"
+      }
+    }
+  },
+  "info": {
+    "description": "Trimmed to only the schemas used by find-ai-sdk-go's spec-drift test (internal/spectest). Not the full backend API surface — see internal/tools/trimspec.",
+    "title": "Find AI Studio API (knowledge/datasets subset)",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0"
+}

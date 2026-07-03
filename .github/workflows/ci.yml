@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        go-version: ["1.22", "1.23", "stable"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+      - run: go vet ./...
+      - run: go test ./... -race -cover
+      - run: go build ./...
+      - name: Build examples
+        run: go build ./examples/...
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+      - uses: golangci/golangci-lint-action@v6
+        with:
+          version: latest
+
+  spec-drift:
+    runs-on: ubuntu-latest
+    continue-on-error: true # promote to blocking once the drift test has proven stable
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "stable"
+      - run: go test -tags=spec ./internal/spectest/... -v
