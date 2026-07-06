@@ -1,7 +1,5 @@
 package findai
 
-import "time"
-
 // FieldType is the data type of a template field.
 type FieldType string
 
@@ -58,8 +56,8 @@ type TemplateResponse struct {
 	IsActive    bool            `json:"is_active"`
 	CreatedBy   *string         `json:"created_by,omitempty"`
 	UpdatedBy   *string         `json:"updated_by,omitempty"`
-	CreatedAt   time.Time       `json:"created_at"`
-	UpdatedAt   time.Time       `json:"updated_at"`
+	CreatedAt   FlexTime `json:"created_at"`
+	UpdatedAt   FlexTime `json:"updated_at"`
 }
 
 // RecordResponse is one row in a dataset. ValuesData holds the row's field
@@ -74,8 +72,8 @@ type RecordResponse struct {
 	IsActive        bool           `json:"is_active"`
 	CreatedBy       *string        `json:"created_by,omitempty"`
 	UpdatedBy       *string        `json:"updated_by,omitempty"`
-	CreatedAt       time.Time      `json:"created_at"`
-	UpdatedAt       time.Time      `json:"updated_at"`
+	CreatedAt       FlexTime       `json:"created_at"`
+	UpdatedAt       FlexTime       `json:"updated_at"`
 }
 
 // LimitsResponse describes the effective knowledge/dataset limits for the
