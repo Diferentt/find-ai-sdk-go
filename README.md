@@ -153,6 +153,21 @@ for _, rowErr := range result.Errors {
 }
 ```
 
+### Webchat visitor tokens
+
+For webchat connections with `auth_mode="signed"`, generate a JWT for your end-users from your backend:
+
+```go
+token, err := findai.GenerateWebchatVisitorToken(
+    "your_webhook_secret", // from the webchat connection config
+    "end_user_123",        // your app's user identifier
+    time.Hour,             // token TTL (default: 1h if <= 0)
+)
+// send `token` to your frontend; it attaches it to webchat requests
+```
+
+The token is a HS256 JWT with claims `{visitor_id, exp}` signed with the connection's `webhook_secret`. No external dependencies required.
+
 ## Error handling
 
 Every non-2xx response is returned as `*findai.APIError`:
