@@ -38,6 +38,8 @@ var wantedSchemas = []string{
 	"CSVImportError",
 	"KnowledgeLimitsResponse",
 	"FieldDefinition",
+	"ScheduledJobResponse",
+	"TaskInvokeResponse",
 }
 
 func main() {

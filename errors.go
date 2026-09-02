@@ -31,6 +31,10 @@ func IsUnauthorized(err error) bool { return hasStatus(err, 401) }
 // IsForbidden reports whether err is an APIError with status 403.
 func IsForbidden(err error) bool { return hasStatus(err, 403) }
 
+// IsConflict reports whether err is an APIError with status 409 — e.g.
+// invoking a task that is disabled.
+func IsConflict(err error) bool { return hasStatus(err, 409) }
+
 // IsValidationError reports whether err is an APIError with status 422.
 func IsValidationError(err error) bool { return hasStatus(err, 422) }
 

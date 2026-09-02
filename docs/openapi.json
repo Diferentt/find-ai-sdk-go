@@ -181,15 +181,12 @@
             "type": "integer"
           },
           "query": {
+            "default": "",
             "maxLength": 500,
-            "minLength": 1,
             "title": "Query",
             "type": "string"
           }
         },
-        "required": [
-          "query"
-        ],
         "title": "FulltextSearchRequest",
         "type": "object"
       },
@@ -260,13 +257,21 @@
           "knowledge_max_templates": {
             "title": "Knowledge Max Templates",
             "type": "integer"
+          },
+          "reserved_field_names": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Reserved Field Names",
+            "type": "array"
           }
         },
         "required": [
           "knowledge_max_templates",
           "knowledge_max_fields_per_template",
           "knowledge_max_records_per_template",
-          "knowledge_max_searchable_fields"
+          "knowledge_max_searchable_fields",
+          "reserved_field_names"
         ],
         "title": "KnowledgeLimitsResponse",
         "type": "object"
@@ -378,6 +383,168 @@
           "updated_at"
         ],
         "title": "RecordResponse",
+        "type": "object"
+      },
+      "ScheduledJobResponse": {
+        "description": "Response model for a task.",
+        "properties": {
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "enabled": {
+            "title": "Enabled",
+            "type": "boolean"
+          },
+          "eventbridge_error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Eventbridge Error"
+          },
+          "eventbridge_status": {
+            "title": "Eventbridge Status",
+            "type": "string"
+          },
+          "flow_id": {
+            "title": "Flow Id",
+            "type": "string"
+          },
+          "id": {
+            "title": "Id",
+            "type": "string"
+          },
+          "initial_state": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Initial State"
+          },
+          "inputs": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Parameter names the task accepts under `initial_state.params`, derived from the flow's nodes. Only present on the single-task GET: computing it costs a flow read per task.",
+            "title": "Inputs"
+          },
+          "last_run_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Run At"
+          },
+          "last_run_status": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Last Run Status"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
+          "schedule_expression": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schedule Expression"
+          },
+          "schedule_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Schedule Type"
+          },
+          "tenant_id": {
+            "title": "Tenant Id",
+            "type": "string"
+          },
+          "timezone": {
+            "title": "Timezone",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          },
+          "version_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version Id"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Warnings",
+            "type": "array"
+          }
+        },
+        "required": [
+          "id",
+          "tenant_id",
+          "name",
+          "flow_id",
+          "version_id",
+          "timezone",
+          "initial_state",
+          "enabled",
+          "created_at",
+          "updated_at",
+          "last_run_at",
+          "last_run_status",
+          "eventbridge_status",
+          "eventbridge_error"
+        ],
+        "title": "ScheduledJobResponse",
         "type": "object"
       },
       "SearchHit": {
@@ -532,6 +699,72 @@
         "title": "SemanticSearchResponse",
         "type": "object"
       },
+      "TaskInvokeResponse": {
+        "description": "Result of invoking a task.\n\n``output`` es lo que el flujo escribió bajo el bucket ``output`` del state\n(ver ``_task_output``). ``final_state`` sólo viaja cuando el flujo no\nescribió nada ahí, para no romper a quien ya leía el state entero.",
+        "properties": {
+          "duration_ms": {
+            "title": "Duration Ms",
+            "type": "integer"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "final_state": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Final State"
+          },
+          "job_id": {
+            "title": "Job Id",
+            "type": "string"
+          },
+          "nodes_executed": {
+            "items": {
+              "type": "string"
+            },
+            "title": "Nodes Executed",
+            "type": "array"
+          },
+          "output": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output"
+          },
+          "success": {
+            "title": "Success",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "job_id",
+          "success",
+          "duration_ms"
+        ],
+        "title": "TaskInvokeResponse",
+        "type": "object"
+      },
       "src__interfaces__api__v1__knowledge_models__TemplateResponse": {
         "properties": {
           "created_at": {
@@ -581,6 +814,10 @@
             "title": "Name",
             "type": "string"
           },
+          "slug": {
+            "title": "Slug",
+            "type": "string"
+          },
           "tags": {
             "anyOf": [
               {
@@ -624,6 +861,7 @@
           "id",
           "tenant_id",
           "name",
+          "slug",
           "fields",
           "version",
           "is_active",

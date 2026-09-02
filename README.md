@@ -168,6 +168,40 @@ token, err := findai.GenerateWebchatVisitorToken(
 
 The token is a HS256 JWT with claims `{visitor_id, exp}` signed with the connection's `webhook_secret`. No external dependencies required.
 
+### Tasks (invoke a flow like a function)
+
+A **task** is a flow that runs without a conversation: invoke it with input
+parameters and get the result back synchronously, like calling a lambda.
+Requires an API key with the `flows:execute` scope.
+
+```go
+res, err := client.InvokeTask(ctx, "task_id", map[string]any{
+    "texto":  "hola mundo",
+    "idioma": "en",
+})
+if err != nil {
+    // findai.IsNotFound(err): unknown task; findai.IsConflict(err): task disabled
+    log.Fatal(err)
+}
+if !res.Success {
+    log.Fatalf("flow failed: %s", *res.Error) // ran and failed: 200, not an APIError
+}
+fmt.Println(res.Output["traduccion"]) // what the flow wrote under the "output" bucket
+```
+
+Parameters go to the flow's `{{params.*}}` state; which ones a task accepts is
+reported by `GetTask` (derived from the flow, not declared on the task):
+
+```go
+task, _ := client.GetTask(ctx, "task_id")
+fmt.Println(task.Inputs) // e.g. [idioma texto]
+```
+
+`InvokeTaskWithState` gives control over the full `initial_state` for flows
+that read buckets other than `params`. The HTTP paths say `scheduled-jobs`:
+same resource — a task may also carry a cron schedule, and either trigger
+works without the other.
+
 ## Error handling
 
 Every non-2xx response is returned as `*findai.APIError`:

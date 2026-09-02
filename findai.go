@@ -1,7 +1,7 @@
-// Package findai is a Go client for the FindAI Studio "datasets" (knowledge
-// module) API: list your dataset tables, inspect their structure, and
-// create/read/update/delete rows, plus full-text search, semantic search,
-// and CSV import.
+// Package findai is a Go client for the FindAI Studio API: the "datasets"
+// (knowledge module) endpoints (list your dataset tables, inspect their
+// structure, create/read/update/delete rows, full-text and semantic search,
+// CSV import) and tasks: flows invoked like functions (InvokeTask).
 package findai
 
 import (

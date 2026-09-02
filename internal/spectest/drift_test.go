@@ -118,6 +118,8 @@ func TestDTOsMatchOpenAPISpec(t *testing.T) {
 		{"CSVImportError", findai.CSVImportRowError{}},
 		{"KnowledgeLimitsResponse", findai.LimitsResponse{}},
 		{"FieldDefinition", findai.TemplateField{}},
+		{"ScheduledJobResponse", findai.TaskResponse{}},
+		{"TaskInvokeResponse", findai.TaskInvokeResponse{}},
 	}
 
 	for _, tc := range cases {
