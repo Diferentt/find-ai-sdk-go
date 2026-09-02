@@ -4,9 +4,9 @@
 [![Go Reference](https://pkg.go.dev/badge/github.com/Diferentt/find-ai-sdk-go.svg)](https://pkg.go.dev/github.com/Diferentt/find-ai-sdk-go)
 [![License](https://img.shields.io/badge/license-Apache--2.0-blue.svg)](LICENSE)
 
-A Go client for FindAI Studio's **datasets** (a.k.a. the knowledge module): list your dataset tables, inspect their field schema, and create/read/update/delete rows — plus full-text search, semantic search, and CSV import.
+A Go client for FindAI Studio: its **datasets** (a.k.a. the knowledge module: list your dataset tables, inspect their field schema, create/read/update/delete rows, full-text and semantic search, CSV import) and its **tasks**, flows you invoke like functions with input parameters and a synchronous result (see [Tasks](#tasks-invoke-a-flow-like-a-function)).
 
-This SDK is deliberately scoped to *data* operations. Creating or editing a dataset's schema (its "table structure") is a dashboard-only action; the SDK works with tables that already exist.
+This SDK is deliberately scoped to *using* what already exists. Creating or editing a dataset's schema, or building the flow behind a task, is a dashboard-only action; the SDK works with tables and tasks that are already there.
 
 ## Install
 
@@ -54,7 +54,7 @@ More runnable examples: [`examples/basic_crud`](examples/basic_crud), [`examples
 
 ## Authentication
 
-Requests are authenticated with a tenant-scoped API key (format `fai_...`) carrying the `dataset:manage` scope. Create one from your FindAI Studio dashboard's API keys section, then pass it to `NewClient`.
+Requests are authenticated with a tenant-scoped API key (format `fai_...`). Create one from your FindAI Studio dashboard's API keys section, then pass it to `NewClient`. The key needs the scope of what you call: `dataset:manage` for datasets, `flows:execute` for tasks (`InvokeTask`, `GetTask`); one key can carry both.
 
 Note: `https://api.en-kel.com` is the API host — different from `https://app.en-kel.com`, which is the dashboard web app. `WithBaseURL` must point at the API host.
 
