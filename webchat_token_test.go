@@ -89,7 +89,9 @@ func TestGenerateWebchatVisitorToken_DefaultTTL(t *testing.T) {
 	parts := strings.Split(token, ".")
 	claimsJSON, _ := base64.RawURLEncoding.DecodeString(parts[1])
 	var claims map[string]any
-	json.Unmarshal(claimsJSON, &claims)
+	if err := json.Unmarshal(claimsJSON, &claims); err != nil {
+		t.Fatalf("claims are not JSON: %v", err)
+	}
 
 	exp := int64(claims["exp"].(float64))
 	expectedExp := time.Now().Add(time.Hour).Unix()
